@@ -1,0 +1,25 @@
+{
+  "name": "wolfmen-fpl-tools",
+  "version": "1.0.0",
+  "description": "Fantasy Premier League tools for Wolfmen mini-league with Google Apps Script",
+  "main": "src/main.gs",
+  "scripts": {
+    "push": "clasp push",
+    "pull": "clasp pull",
+    "open": "clasp open",
+    "deploy": "clasp deploy",
+    "logs": "clasp logs"
+  },
+  "keywords": [
+    "fpl",
+    "fantasy-premier-league",
+    "google-apps-script",
+    "spreadsheet"
+  ],
+  "author": "Cesar Eye Serrano <cesareyeserrano@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@google/clasp": "^2.4.2",
+    "@types/google-apps-script": "^1.0.83"
+  }
+}
