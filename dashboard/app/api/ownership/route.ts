@@ -2,8 +2,11 @@ import { NextResponse } from 'next/server';
 import { getBootstrap, getLeagueStandings, getTeamPicks, getCurrentGameweek, getPlayersMap } from '@/lib/fpl-client';
 import { CONFIG } from '@/lib/types';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const selectedTeamId = parseInt(searchParams.get('teamId') || String(CONFIG.YOUR_TEAM_ID));
+
     const bootstrap = await getBootstrap();
     const currentGW = getCurrentGameweek(bootstrap);
     const playersMap = getPlayersMap(bootstrap);
@@ -12,7 +15,7 @@ export async function GET() {
     const teamIds = leagueData.standings.results.map((t: any) => t.entry);
 
     const ownershipCount: Record<number, number> = {};
-    const yourTeamPlayers = new Set<number>();
+    const selectedTeamPlayers = new Set<number>();
 
     // Fetch all team picks
     await Promise.all(
@@ -23,8 +26,8 @@ export async function GET() {
             const playerId = pick.element;
             ownershipCount[playerId] = (ownershipCount[playerId] || 0) + 1;
 
-            if (teamId === CONFIG.YOUR_TEAM_ID) {
-              yourTeamPlayers.add(playerId);
+            if (teamId === selectedTeamId) {
+              selectedTeamPlayers.add(playerId);
             }
           });
         } catch (err) {
@@ -39,7 +42,7 @@ export async function GET() {
       if (!player) return null;
 
       const ownership = (count / teamIds.length) * 100;
-      const inYourTeam = yourTeamPlayers.has(id);
+      const inSelectedTeam = selectedTeamPlayers.has(id);
 
       return {
         id,
@@ -47,8 +50,8 @@ export async function GET() {
         team: player.team,
         position: player.position,
         ownership,
-        differential: inYourTeam ? (100 - ownership) : -ownership,
-        in_your_team: inYourTeam,
+        differential: inSelectedTeam ? (100 - ownership) : -ownership,
+        in_your_team: inSelectedTeam,
         count,
       };
     }).filter(Boolean);
