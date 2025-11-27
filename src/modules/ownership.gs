@@ -1,6 +1,8 @@
 /*************************************************************
  * 👥 OWNERSHIP MODULE
  * Generates differential ownership analysis (DXP)
+ *
+ * @author Cesar Eye Serrano
  *************************************************************/
 
 /**

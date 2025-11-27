@@ -1,6 +1,8 @@
 /*************************************************************
  * 🎨 COLOR UTILITIES
  * HSL interpolation and color manipulation
+ *
+ * @author Cesar Eye Serrano
  *************************************************************/
 
 /**

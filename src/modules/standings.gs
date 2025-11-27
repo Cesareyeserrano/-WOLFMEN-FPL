@@ -1,6 +1,8 @@
 /*************************************************************
  * 📊 STANDINGS MODULE
  * Updates and formats league standings table
+ *
+ * @author Cesar Eye Serrano
  *************************************************************/
 
 /**

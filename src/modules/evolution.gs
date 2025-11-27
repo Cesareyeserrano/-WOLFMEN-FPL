@@ -1,6 +1,8 @@
 /*************************************************************
  * 📈 EVOLUTION MODULE
  * Tracks team performance over time
+ *
+ * @author Cesar Eye Serrano
  *************************************************************/
 
 /**

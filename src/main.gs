@@ -1,6 +1,10 @@
 /*************************************************************
  * 🐺 WOLFMEN FPL TOOLS — MAIN
  * UI Menu and main dispatcher functions
+ *
+ * @author Cesar Eye Serrano
+ * @email cesareyeserrano@gmail.com
+ * @github https://github.com/Cesareyeserrano
  *************************************************************/
 
 /**
@@ -16,6 +20,9 @@ function onOpen() {
     .addItem('🔄 Update All', 'updateAll')
     .addSeparator()
     .addItem('🧹 Clear Cache', 'clearAllCache')
+    .addSeparator()
+    .addItem('📱 Show Dashboard', 'showDashboard')
+    .addItem('📝 About / Acerca de', 'showAbout')
     .addToUi();
 
   console.log('✅ FPL Tools menu loaded');
