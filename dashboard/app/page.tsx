@@ -94,7 +94,7 @@ export default function Home() {
                 <span>🐺</span>
                 <span>Wolfmen FPL</span>
               </h1>
-              <p className="text-gray-400 mt-1">Fantasy Premier League Analytics</p>
+              <p className="text-gray-400 mt-1">DXP Super League Analytics</p>
             </div>
 
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
@@ -173,7 +173,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-black/50 border-t border-gray-700 mt-12">
         <div className="container mx-auto px-4 py-6 text-center text-gray-400">
-          <p>Made with 🐺 for Wolfmen FC</p>
+          <p>Made by César Agusto Reyes</p>
           <p className="text-sm mt-1">
             Viewing: <span className="text-wolfmen-orange">{selectedManager?.manager_name}</span> • Data updates every 10 minutes
           </p>
