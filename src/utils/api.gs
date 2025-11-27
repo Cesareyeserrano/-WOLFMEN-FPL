@@ -1,6 +1,8 @@
 /*************************************************************
  * 🌐 API & FETCH UTILITIES
  * HTTP requests, caching, and API helpers
+ *
+ * @author Cesar Eye Serrano
  *************************************************************/
 
 /**

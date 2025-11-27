@@ -1,6 +1,9 @@
 /*************************************************************
  * 🐺 WOLFMEN FPL TOOLS — CONFIGURATION
  * Global settings and constants
+ *
+ * @author Cesar Eye Serrano
+ * @email cesareyeserrano@gmail.com
  *************************************************************/
 
 const CONFIG = {

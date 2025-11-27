@@ -1,6 +1,8 @@
 /*************************************************************
  * 📊 SHEET HELPERS
  * Google Sheets utilities and formatting
+ *
+ * @author Cesar Eye Serrano
  *************************************************************/
 
 /**
