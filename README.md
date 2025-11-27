@@ -176,4 +176,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made by cesareyeserrano - and AI**
+**By cesareyeserrano with AI tools**
