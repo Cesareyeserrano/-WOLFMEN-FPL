@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding: 1rem;
+      color: #212529;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #37003c;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #37003c;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: #6c757d;
+      margin-top: 0.25rem;
+    }
+
+    .section {
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6c757d;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #37003c, #4a0048);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(55, 0, 60, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #37003c;
+      border: 2px solid #e9ecef;
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9fa;
+      border-color: #37003c;
+    }
+
+    .btn-success {
+      background: #21f421;
+      color: #37003c;
+    }
+
+    .btn-success:hover {
+      background: #1dd81d;
+    }
+
+    .btn-danger {
+      background: #f66060;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #e05050;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-icon {
+      font-size: 1.25rem;
+    }
+
+    .status-card {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e9ecef;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .status-label {
+      font-size: 0.75rem;
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    .status-value {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #212529;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .badge-online {
+      background: #d4f4dd;
+      color: #1e7e34;
+    }
+
+    .badge-offline {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .divider {
+      height: 1px;
+      background: #e9ecef;
+      margin: 1rem 0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 1rem;
+      color: #6c757d;
+      font-size: 0.875rem;
+    }
+
+    .spinner-small {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e9ecef;
+      border-top-color: #37003c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer {
+      text-align: center;
+      padding-top: 1rem;
+      border-top: 1px solid #e9ecef;
+      margin-top: 1.5rem;
+    }
+
+    .footer-text {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+
+    .link {
+      color: #37003c;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">🐺</div>
+    <div class="title">FPL Tools</div>
+    <div class="subtitle">Wolfmen League</div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="section">
+    <div class="section-title">🚀 Acciones Rápidas</div>
+
+    <button class="btn btn-primary" onclick="openDashboard()">
+      <span class="btn-icon">📊</span>
+      <span>Abrir Dashboard</span>
+    </button>
+
+    <button class="btn btn-success" onclick="updateAll()" id="updateBtn">
+      <span class="btn-icon">🔄</span>
+      <span>Actualizar Todo</span>
+    </button>
+  </div>
+
+  <!-- Individual Updates -->
+  <div class="section">
+    <div class="section-title">📋 Actualizar Individual</div>
+
+    <button class="btn btn-secondary" onclick="updateStandingsOnly()">
+      <span class="btn-icon">🏆</span>
+      <span>Clasificación</span>
+    </button>
+
+    <button class="btn btn-secondary" onclick="updateOwnershipOnly()">
+      <span class="btn-icon">👥</span>
+      <span>Ownership</span>
+    </button>
+
+    <button class="btn btn-secondary" onclick="updateEvolutionOnly()">
+      <span class="btn-icon">📈</span>
+      <span>Evolución</span>
+    </button>
+  </div>
+
+  <!-- Status -->
+  <div class="section">
+    <div class="section-title">ℹ️ Estado</div>
+
+    <div class="status-card" id="statusCard">
+      <div class="status-row">
+        <span class="status-label">API FPL</span>
+        <span class="status-badge badge-online" id="apiStatus">
+          <span class="spinner-small"></span>
+        </span>
+      </div>
+      <div class="divider"></div>
+      <div class="status-row">
+        <span class="status-label">Gameweek</span>
+        <span class="status-value" id="currentGw">-</span>
+      </div>
+      <div class="status-row">
+        <span class="status-label">Última Act.</span>
+        <span class="status-value" id="lastUpdate">-</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Utilities -->
+  <div class="section">
+    <div class="section-title">🛠️ Utilidades</div>
+
+    <button class="btn btn-secondary" onclick="openConfig()">
+      <span class="btn-icon">⚙️</span>
+      <span>Configuración</span>
+    </button>
+
+    <button class="btn btn-danger" onclick="clearCache()">
+      <span class="btn-icon">🧹</span>
+      <span>Limpiar Cache</span>
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p class="footer-text">
+      Made with ❤️ for Wolfmen<br>
+      <a href="https://github.com/Cesareyeserrano/-WOLFMEN-FPL" class="link" target="_blank">GitHub</a>
+    </p>
+  </div>
+
+  <script>
+    // Open dashboard
+    function openDashboard() {
+      google.script.run
+        .withSuccessHandler(() => {
+          console.log('Dashboard opened');
+        })
+        .withFailureHandler((error) => {
+          alert('Error: ' + error.message);
+        })
+        .showDashboard();
+    }
+
+    // Update all
+    function updateAll() {
+      const btn = document.getElementById('updateBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="btn-icon"><span class="spinner-small"></span></span><span>Actualizando...</span>';
+
+      google.script.run
+        .withSuccessHandler(() => {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="btn-icon">✅</span><span>¡Actualizado!</span>';
+          setTimeout(() => {
+            btn.innerHTML = '<span class="btn-icon">🔄</span><span>Actualizar Todo</span>';
+          }, 2000);
+          loadStatus();
+        })
+        .withFailureHandler((error) => {
+          btn.disabled = false;
+          btn.innerHTML = '<span class="btn-icon">🔄</span><span>Actualizar Todo</span>';
+          alert('Error al actualizar: ' + error.message);
+        })
+        .updateAllData();
+    }
+
+    // Update standings only
+    function updateStandingsOnly() {
+      google.script.run
+        .withSuccessHandler(() => {
+          alert('Clasificación actualizada ✅');
+          loadStatus();
+        })
+        .withFailureHandler((error) => {
+          alert('Error: ' + error.message);
+        })
+        .updateStandings();
+    }
+
+    // Update ownership only
+    function updateOwnershipOnly() {
+      google.script.run
+        .withSuccessHandler(() => {
+          alert('Ownership actualizado ✅');
+          loadStatus();
+        })
+        .withFailureHandler((error) => {
+          alert('Error: ' + error.message);
+        })
+        .generateOwnership();
+    }
+
+    // Update evolution only
+    function updateEvolutionOnly() {
+      google.script.run
+        .withSuccessHandler(() => {
+          alert('Evolución actualizada ✅');
+          loadStatus();
+        })
+        .withFailureHandler((error) => {
+          alert('Error: ' + error.message);
+        })
+        .generateEvolution();
+    }
+
+    // Open config
+    function openConfig() {
+      google.script.run
+        .withSuccessHandler(() => {
+          console.log('Config opened');
+        })
+        .withFailureHandler((error) => {
+          alert('Error: ' + error.message);
+        })
+        .showConfigDialog();
+    }
+
+    // Clear cache
+    function clearCache() {
+      if (confirm('¿Seguro que quieres limpiar el cache?')) {
+        google.script.run
+          .withSuccessHandler((result) => {
+            alert(result.message);
+          })
+          .withFailureHandler((error) => {
+            alert('Error: ' + error.message);
+          })
+          .clearAllCaches();
+      }
+    }
+
+    // Load status
+    function loadStatus() {
+      google.script.run
+        .withSuccessHandler((status) => {
+          const apiStatusEl = document.getElementById('apiStatus');
+
+          if (status.status === 'online') {
+            apiStatusEl.className = 'status-badge badge-online';
+            apiStatusEl.textContent = 'Online';
+            document.getElementById('currentGw').textContent = 'GW ' + (status.currentGameweek || '-');
+          } else {
+            apiStatusEl.className = 'status-badge badge-offline';
+            apiStatusEl.textContent = 'Offline';
+          }
+
+          // Update last update time
+          const now = new Date();
+          const timeStr = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+          document.getElementById('lastUpdate').textContent = timeStr;
+        })
+        .withFailureHandler((error) => {
+          const apiStatusEl = document.getElementById('apiStatus');
+          apiStatusEl.className = 'status-badge badge-offline';
+          apiStatusEl.textContent = 'Error';
+        })
+        .getApiStatus();
+    }
+
+    // Initialize
+    window.onload = function() {
+      loadStatus();
+
+      // Auto-refresh status every 5 minutes
+      setInterval(loadStatus, 5 * 60 * 1000);
+    };
+  </script>
+</body>
+</html>

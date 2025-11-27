@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+      padding: 1.5rem;
+      color: #212529;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #37003c;
+    }
+
+    .header-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #37003c;
+    }
+
+    .header-subtitle {
+      font-size: 0.875rem;
+      color: #6c757d;
+      margin-top: 0.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #212529;
+      font-size: 0.875rem;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #37003c;
+      box-shadow: 0 0 0 3px rgba(55, 0, 60, 0.1);
+    }
+
+    .form-help {
+      font-size: 0.75rem;
+      color: #6c757d;
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .info-card {
+      background: #e7f3ff;
+      border-left: 4px solid #0066cc;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-card-title {
+      font-weight: 700;
+      color: #0066cc;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card-text {
+      font-size: 0.75rem;
+      color: #004080;
+      line-height: 1.5;
+    }
+
+    .info-card-text a {
+      color: #0066cc;
+      text-decoration: underline;
+    }
+
+    .current-config {
+      background: white;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .config-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f1f3f5;
+    }
+
+    .config-row:last-child {
+      border-bottom: none;
+    }
+
+    .config-label {
+      font-size: 0.75rem;
+      color: #6c757d;
+      font-weight: 600;
+    }
+
+    .config-value {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #212529;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #37003c, #4a0048);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(55, 0, 60, 0.3);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #37003c;
+      border: 2px solid #e9ecef;
+    }
+
+    .btn-secondary:hover {
+      background: #f8f9fa;
+      border-color: #37003c;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+      font-size: 0.875rem;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert-success {
+      background: #d4f4dd;
+      color: #1e7e34;
+      border-left: 4px solid #28a745;
+    }
+
+    .alert-danger {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e9ecef;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .how-to-find {
+      background: #fff9e6;
+      border: 1px solid #ffe066;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .how-to-find-title {
+      font-weight: 700;
+      color: #997400;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .how-to-find-steps {
+      font-size: 0.75rem;
+      color: #997400;
+      line-height: 1.6;
+    }
+
+    .how-to-find-steps ol {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .how-to-find-steps li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-icon">⚙️</div>
+    <div class="header-title">Configuración FPL</div>
+    <div class="header-subtitle">Configura tus IDs de liga y equipo</div>
+  </div>
+
+  <!-- Alert -->
+  <div class="alert" id="alert"></div>
+
+  <!-- Current Config -->
+  <div class="current-config">
+    <div class="config-row">
+      <span class="config-label">League ID</span>
+      <span class="config-value" id="currentLeagueId">-</span>
+    </div>
+    <div class="config-row">
+      <span class="config-label">Team ID</span>
+      <span class="config-value" id="currentTeamId">-</span>
+    </div>
+  </div>
+
+  <!-- Info Card -->
+  <div class="info-card">
+    <div class="info-card-title">
+      <span>ℹ️</span>
+      <span>Importante</span>
+    </div>
+    <div class="info-card-text">
+      Los cambios aquí son temporales (solo para esta sesión). Para cambios permanentes,
+      edita el archivo <strong>src/config/config.gs</strong> directamente.
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form id="configForm">
+    <div class="form-group">
+      <label class="form-label" for="leagueId">
+        League ID
+      </label>
+      <input
+        type="number"
+        id="leagueId"
+        class="form-input"
+        placeholder="Ej: 123456"
+        required
+      >
+      <p class="form-help">
+        <span>💡</span>
+        <span>ID de tu mini-league de FPL</span>
+      </p>
+
+      <div class="how-to-find">
+        <div class="how-to-find-title">¿Cómo encontrarlo?</div>
+        <div class="how-to-find-steps">
+          <ol>
+            <li>Ve a fantasy.premierleague.com</li>
+            <li>Haz clic en "Leagues & Cups"</li>
+            <li>Selecciona tu mini-league</li>
+            <li>El ID está en la URL: <code>/leagues/XXXXX/standings/</code></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="teamId">
+        Team ID
+      </label>
+      <input
+        type="number"
+        id="teamId"
+        class="form-input"
+        placeholder="Ej: 654321"
+        required
+      >
+      <p class="form-help">
+        <span>💡</span>
+        <span>ID de tu equipo de FPL</span>
+      </p>
+
+      <div class="how-to-find">
+        <div class="how-to-find-title">¿Cómo encontrarlo?</div>
+        <div class="how-to-find-steps">
+          <ol>
+            <li>Ve a fantasy.premierleague.com</li>
+            <li>Haz clic en "Pick Team" o "Points"</li>
+            <li>El ID está en la URL: <code>/entry/XXXXX/</code></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-group">
+      <button type="button" class="btn btn-secondary" onclick="google.script.host.close()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary" id="saveBtn">
+        Guardar Cambios
+      </button>
+    </div>
+  </form>
+
+  <script>
+    // Load current config
+    function loadCurrentConfig() {
+      google.script.run
+        .withSuccessHandler((config) => {
+          document.getElementById('currentLeagueId').textContent = config.leagueId || 'No configurado';
+          document.getElementById('currentTeamId').textContent = config.teamId || 'No configurado';
+
+          // Pre-fill form
+          document.getElementById('leagueId').value = config.leagueId || '';
+          document.getElementById('teamId').value = config.teamId || '';
+        })
+        .withFailureHandler((error) => {
+          showAlert('Error al cargar configuración: ' + error.message, 'danger');
+        })
+        .getConfig();
+    }
+
+    // Show alert
+    function showAlert(message, type) {
+      const alert = document.getElementById('alert');
+      alert.className = 'alert alert-' + type + ' show';
+      alert.textContent = message;
+
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 5000);
+    }
+
+    // Handle form submission
+    document.getElementById('configForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const leagueId = document.getElementById('leagueId').value;
+      const teamId = document.getElementById('teamId').value;
+
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner"></span>Guardando...';
+
+      const newConfig = {
+        leagueId: parseInt(leagueId),
+        teamId: parseInt(teamId)
+      };
+
+      google.script.run
+        .withSuccessHandler((result) => {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Guardar Cambios';
+
+          if (result.success) {
+            showAlert(result.message, 'success');
+            loadCurrentConfig();
+
+            // Close dialog after 2 seconds
+            setTimeout(() => {
+              google.script.host.close();
+            }, 2000);
+          } else {
+            showAlert(result.message, 'danger');
+          }
+        })
+        .withFailureHandler((error) => {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Guardar Cambios';
+          showAlert('Error al guardar: ' + error.message, 'danger');
+        })
+        .updateConfig(newConfig);
+    });
+
+    // Initialize
+    window.onload = function() {
+      loadCurrentConfig();
+    };
+  </script>
+</body>
+</html>

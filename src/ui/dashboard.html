@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wolfmen FPL Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-color: #37003c;
+      --secondary-color: #00ff87;
+      --accent-color: #f6b26b;
+      --success-color: #21f421;
+      --danger-color: #f66060;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-card: #ffffff;
+      --text-primary: #212529;
+      --text-secondary: #6c757d;
+      --border-color: #dee2e6;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
+      --shadow-lg: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    [data-theme="dark"] {
+      --primary-color: #00ff87;
+      --secondary-color: #37003c;
+      --accent-color: #f6b26b;
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --bg-card: #242424;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --border-color: #404040;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #4a0048 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .logo-icon {
+      font-size: 2rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+
+    .refresh-btn {
+      background: var(--secondary-color);
+      color: var(--primary-color);
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .refresh-btn.loading {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-icon {
+      font-size: 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-change {
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .stat-change.positive {
+      color: var(--success-color);
+    }
+
+    .stat-change.negative {
+      color: var(--danger-color);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    .tab {
+      padding: 1rem 2rem;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+    }
+
+    .tab.active {
+      color: var(--primary-color);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary-color);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--bg-secondary);
+    }
+
+    th {
+      padding: 1rem;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    tr:hover {
+      background: var(--bg-secondary);
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .rank-1 {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #37003c;
+    }
+
+    .rank-2 {
+      background: linear-gradient(135deg, #c0c0c0, #e8e8e8);
+      color: #37003c;
+    }
+
+    .rank-3 {
+      background: linear-gradient(135deg, #cd7f32, #e8a87c);
+      color: white;
+    }
+
+    .rank-other {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .user-row {
+      background: rgba(246, 178, 107, 0.1);
+      border-left: 4px solid var(--accent-color);
+      font-weight: 600;
+    }
+
+    .differential {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .differential.positive {
+      background: rgba(33, 244, 33, 0.1);
+      color: var(--success-color);
+    }
+
+    .differential.negative {
+      background: rgba(246, 96, 96, 0.1);
+      color: var(--danger-color);
+    }
+
+    .owned-badge {
+      color: var(--success-color);
+      font-weight: 700;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .loading-content {
+      background: var(--bg-card);
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .error-message {
+      background: rgba(246, 96, 96, 0.1);
+      color: var(--danger-color);
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--danger-color);
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        gap: 0.5rem;
+      }
+
+      .tab {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      table {
+        font-size: 0.875rem;
+      }
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <span class="logo-icon">🐺</span>
+        <span>Wolfmen FPL Dashboard</span>
+      </div>
+      <div class="header-actions">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <button class="refresh-btn" onclick="refreshAll()" id="refreshBtn">
+          <span>🔄</span>
+          <span>Actualizar Todo</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Tu Posición</span>
+          <span class="stat-icon">🏆</span>
+        </div>
+        <div class="stat-value" id="yourRank">-</div>
+        <div class="stat-change" id="rankChange"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Puntos Totales</span>
+          <span class="stat-icon">⚡</span>
+        </div>
+        <div class="stat-value" id="totalPoints">-</div>
+        <div class="stat-change" id="pointsChange"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Puntos GW</span>
+          <span class="stat-icon">📊</span>
+        </div>
+        <div class="stat-value" id="gwPoints">-</div>
+        <div class="stat-change" id="gwChange"></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-card-header">
+          <span class="stat-label">Diferenciales</span>
+          <span class="stat-icon">🎯</span>
+        </div>
+        <div class="stat-value" id="differentials">-</div>
+        <div class="stat-change">Jugadores únicos</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('standings')">📊 Clasificación</button>
+      <button class="tab" onclick="switchTab('ownership')">👥 Ownership</button>
+      <button class="tab" onclick="switchTab('evolution')">📈 Evolución</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="standings" class="tab-content active">
+      <div class="table-container">
+        <table id="standingsTable">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Equipo</th>
+              <th>Mánager</th>
+              <th>GW</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="standingsBody">
+            <tr>
+              <td colspan="5">
+                <div class="empty-state">
+                  <div class="empty-state-icon">📊</div>
+                  <p>Cargando clasificación...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="ownership" class="tab-content">
+      <div class="table-container">
+        <table id="ownershipTable">
+          <thead>
+            <tr>
+              <th>Jugador</th>
+              <th>Equipo</th>
+              <th>Pos</th>
+              <th>Own%</th>
+              <th>Tuyo</th>
+              <th>DXP</th>
+            </tr>
+          </thead>
+          <tbody id="ownershipBody">
+            <tr>
+              <td colspan="6">
+                <div class="empty-state">
+                  <div class="empty-state-icon">👥</div>
+                  <p>Cargando ownership...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="evolution" class="tab-content">
+      <div class="table-container">
+        <div class="empty-state">
+          <div class="empty-state-icon">📈</div>
+          <p>Visualización de evolución histórica</p>
+          <p style="margin-top: 1rem; font-size: 0.875rem;">Próximamente...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p id="loadingText">Cargando datos...</p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentTheme = 'light';
+    let currentTab = 'standings';
+    let userData = null;
+
+    // Theme toggle
+    function toggleTheme() {
+      currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      document.getElementById('theme-icon').textContent = currentTheme === 'light' ? '🌙' : '☀️';
+      localStorage.setItem('theme', currentTheme);
+    }
+
+    // Load saved theme
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      currentTheme = savedTheme;
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.getElementById('theme-icon').textContent = savedTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      event.target.classList.add('active');
+      document.getElementById(tabName).classList.add('active');
+      currentTab = tabName;
+    }
+
+    // Show loading
+    function showLoading(message = 'Cargando datos...') {
+      document.getElementById('loadingText').textContent = message;
+      document.getElementById('loadingOverlay').classList.add('active');
+    }
+
+    // Hide loading
+    function hideLoading() {
+      document.getElementById('loadingOverlay').classList.remove('active');
+      document.getElementById('progressFill').style.width = '0%';
+    }
+
+    // Update progress
+    function updateProgress(percent) {
+      document.getElementById('progressFill').style.width = percent + '%';
+    }
+
+    // Show error
+    function showError(message) {
+      const errorEl = document.getElementById('errorMessage');
+      errorEl.textContent = message;
+      errorEl.classList.add('show');
+      setTimeout(() => errorEl.classList.remove('show'), 5000);
+    }
+
+    // Load all data
+    function loadData() {
+      showLoading('Cargando datos FPL...');
+      updateProgress(10);
+
+      google.script.run
+        .withSuccessHandler(function(data) {
+          updateProgress(100);
+          hideLoading();
+          renderData(data);
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          showError('Error al cargar los datos: ' + error.message);
+        })
+        .getDashboardData();
+    }
+
+    // Render data
+    function renderData(data) {
+      if (data.error) {
+        showError(data.error);
+        return;
+      }
+
+      userData = data;
+
+      // Update stats
+      document.getElementById('yourRank').textContent = data.yourRank || '-';
+      document.getElementById('totalPoints').textContent = data.totalPoints || '-';
+      document.getElementById('gwPoints').textContent = data.gwPoints || '-';
+      document.getElementById('differentials').textContent = data.differentialCount || '-';
+
+      // Render standings
+      renderStandings(data.standings);
+
+      // Render ownership
+      renderOwnership(data.ownership);
+    }
+
+    // Render standings table
+    function renderStandings(standings) {
+      if (!standings || standings.length === 0) {
+        document.getElementById('standingsBody').innerHTML = `
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <p>No hay datos de clasificación disponibles</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const tbody = document.getElementById('standingsBody');
+      tbody.innerHTML = '';
+
+      standings.forEach(entry => {
+        const row = document.createElement('tr');
+        if (entry.isUser) {
+          row.classList.add('user-row');
+        }
+
+        const rankClass = entry.rank === 1 ? 'rank-1' : entry.rank === 2 ? 'rank-2' : entry.rank === 3 ? 'rank-3' : 'rank-other';
+
+        row.innerHTML = `
+          <td><span class="rank-badge ${rankClass}">${entry.rank}</span></td>
+          <td><strong>${entry.teamName}</strong></td>
+          <td>${entry.managerName}</td>
+          <td>${entry.gwPoints}</td>
+          <td><strong>${entry.totalPoints}</strong></td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    // Render ownership table
+    function renderOwnership(ownership) {
+      if (!ownership || ownership.length === 0) {
+        document.getElementById('ownershipBody').innerHTML = `
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <p>No hay datos de ownership disponibles</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const tbody = document.getElementById('ownershipBody');
+      tbody.innerHTML = '';
+
+      ownership.forEach(player => {
+        const row = document.createElement('tr');
+        const dxpClass = player.dxp > 0 ? 'positive' : player.dxp < 0 ? 'negative' : '';
+
+        row.innerHTML = `
+          <td><strong>${player.name}</strong></td>
+          <td>${player.team}</td>
+          <td>${player.position}</td>
+          <td>${player.ownership}%</td>
+          <td>${player.yours ? '<span class="owned-badge">✓</span>' : '-'}</td>
+          <td><span class="differential ${dxpClass}">${player.dxp > 0 ? '+' : ''}${player.dxp}</span></td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    // Refresh all data
+    function refreshAll() {
+      const btn = document.getElementById('refreshBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      showLoading('Actualizando todos los datos...');
+
+      google.script.run
+        .withSuccessHandler(function() {
+          updateProgress(50);
+          setTimeout(() => {
+            loadData();
+            btn.classList.remove('loading');
+            btn.disabled = false;
+          }, 1000);
+        })
+        .withFailureHandler(function(error) {
+          hideLoading();
+          showError('Error al actualizar: ' + error.message);
+          btn.classList.remove('loading');
+          btn.disabled = false;
+        })
+        .updateAllData();
+    }
+
+    // Initialize
+    window.onload = function() {
+      loadTheme();
+      loadData();
+    };
+  </script>
+</body>
+</html>

@@ -7,18 +7,33 @@
  * Creates custom menu when spreadsheet opens
  */
 function onOpen() {
-  SpreadsheetApp.getUi()
-    .createMenu('🐺 FPL Tools')
-    .addItem('📊 Update Standings', 'updateStandings')
-    .addItem('👥 Generate Ownership DXP', 'generateOwnershipDXP')
-    .addItem('📈 Generate Wolfmen Evolution', 'generateWolfmenEvolution')
+  const ui = SpreadsheetApp.getUi();
+
+  // Main menu
+  ui.createMenu('🐺 FPL Tools')
+    // UI submenu
+    .addSubMenu(ui.createMenu('🎨 Interfaz')
+      .addItem('📊 Abrir Dashboard', 'showDashboard')
+      .addItem('📌 Mostrar Sidebar', 'showSidebar')
+      .addSeparator()
+      .addItem('⚙️ Configuración', 'showConfigDialog'))
     .addSeparator()
-    .addItem('🔄 Update All', 'updateAll')
+    // Update submenu
+    .addSubMenu(ui.createMenu('🔄 Actualizar')
+      .addItem('🏆 Clasificación', 'updateStandings')
+      .addItem('👥 Ownership DXP', 'generateOwnershipDXP')
+      .addItem('📈 Evolución', 'generateWolfmenEvolution')
+      .addSeparator()
+      .addItem('🚀 Actualizar Todo', 'updateAll'))
     .addSeparator()
-    .addItem('🧹 Clear Cache', 'clearAllCache')
+    // Utilities submenu
+    .addSubMenu(ui.createMenu('🛠️ Utilidades')
+      .addItem('🧹 Limpiar Cache', 'clearAllCache')
+      .addItem('📋 Copiar IDs', 'showIdsInfo')
+      .addItem('ℹ️ Acerca de', 'showAbout'))
     .addToUi();
 
-  console.log('✅ FPL Tools menu loaded');
+  console.log('✅ FPL Tools menu loaded with enhanced UI');
 }
 
 /**
@@ -71,4 +86,57 @@ function clearAllCache() {
   } catch (err) {
     console.error(`❌ clearAllCache failed: ${err.message}`);
   }
+}
+
+/**
+ * Show IDs information dialog
+ */
+function showIdsInfo() {
+  const ui = SpreadsheetApp.getUi();
+  const message = `
+📋 TUS IDs CONFIGURADOS
+
+League ID: ${CONFIG.LEAGUE_ID || 'No configurado'}
+Team ID: ${CONFIG.TEAM_ID || 'No configurado'}
+
+Para cambiar estos valores, usa:
+🎨 Interfaz → ⚙️ Configuración
+
+O edita directamente:
+src/config/config.gs
+  `;
+
+  ui.alert('📋 IDs de Configuración', message, ui.ButtonSet.OK);
+}
+
+/**
+ * Show about information
+ */
+function showAbout() {
+  const ui = SpreadsheetApp.getUi();
+  const message = `
+🐺 WOLFMEN FPL TOOLS v2.0
+
+Una herramienta completa para gestionar tu mini-league de Fantasy Premier League.
+
+✨ Características:
+• Dashboard interactivo moderno
+• Análisis de clasificación en tiempo real
+• Ownership y diferenciales (DXP)
+• Seguimiento de evolución
+• Interfaz moderna con temas claro/oscuro
+
+🛠️ Tecnología:
+• Google Apps Script
+• HTML5 / CSS3 / JavaScript
+• FPL API oficial
+
+👨‍💻 Desarrollado por: Wolfmen Team
+📦 Repositorio: github.com/Cesareyeserrano/-WOLFMEN-FPL
+📄 Licencia: MIT
+
+Made with ❤️ for Fantasy Premier League fans
+  `;
+
+  ui.alert('🐺 Acerca de Wolfmen FPL Tools', message, ui.ButtonSet.OK);
 }
